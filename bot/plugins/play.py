@@ -41,7 +41,7 @@ async def leave_vc(client, message):
     group_call = GROUP_CALLS.get(CHAT_ID)
     if group_call:
         await group_call.stop()
-        await message.reply_sticker("CAADAgADOQADfyesDlKEqOOd72VKAg")
+        await message.reply_sticker("CAADBQADCAMAAtFreFVNNKAMgNe-YwI")
 
 @vcusr.on_message(filters.command("live", "!"))
 async def live_vc(client, message):
@@ -191,7 +191,7 @@ async def stream_vc(client, message):
         await group_call.join(CHAT_ID)
         await msg.delete()
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-        caption="streaming requested files🎬")
+        caption=f"{emojilist[j]} <b>Title - [{results[j]['title']}](https://youtube.com{results[j]['url_suffix']})</b>\n")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
