@@ -85,7 +85,9 @@ async def radio_vc(client, message):
     except IndexError: return await msg.edit("🔎 __All radio stations listed [here](https://github.com/AnjanaMadu/radio_stations). Please get link from [here](https://github.com/AnjanaMadu/radio_stations)__", disable_web_page_preview=True)
     if match_url(INPUT_SOURCE) is None:
         return await msg.edit("🔎 __Give me a valid URL__")
+    
     try:
+        
         group_call = GROUP_CALLS.get(CHAT_ID)
         if group_call is None:
             group_call = GroupCallFactory(vcusr, outgoing_audio_bitrate_kbit=512).get_group_call()
@@ -138,10 +140,11 @@ async def play_vc(client, message):
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",                              
         caption="▶️ <b>Playing</b> here the song requested by {} via Youtube".format(
             message.from_user.mention()
+            
         await group_call.start_audio(LOCAL_FILE, repeat=False)     
-        except Exception as e:
+    except Exception as e:
             await message.reply(str(e))
-        return await group_call.stop()
+            return await group_call.stop()
             
         
     
