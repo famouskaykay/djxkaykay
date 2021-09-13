@@ -210,7 +210,7 @@ async def stream_vc(client, message):
                 views = results[0]["views"]
                 
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-        caption=f"{emojilist[j]} <b>Title - [{results[j]['title']}](https://youtube.com{results[j]['url_suffix']})</b>\n")
+        caption=f"streaming {results} via youtube")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
