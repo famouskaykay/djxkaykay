@@ -198,8 +198,8 @@ async def stream_vc(client, message):
                 "4️⃣",
                 "5️⃣",
             ]
-        try:
-            results = YoutubeSearch(query, max_results=1).to_dict()
+    try:
+        results = YoutubeSearch(query, max_results=1).to_dict()
             
 #this is fucking boring          
                 
