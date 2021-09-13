@@ -190,6 +190,13 @@ async def stream_vc(client, message):
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
         await msg.delete()
+        emojilist = [
+                "1️⃣",
+                "2️⃣",
+                "3️⃣",
+                "4️⃣",
+                "5️⃣",
+            ]
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
         caption=f"{emojilist[j]} <b>Title - [{results[j]['title']}](https://youtube.com{results[j]['url_suffix']})</b>\n")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
