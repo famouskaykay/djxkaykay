@@ -200,7 +200,6 @@ async def stream_vc(client, message):
             ]
         
         results = YoutubeSearch
-        kay = message_.from_user
         
 #this is fucking boring          
                 
