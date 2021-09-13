@@ -205,7 +205,7 @@ async def stream_vc(client, message):
 #this is fucking boring          
                 
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-        caption=f"streaming {results}requested by{} via youtube")
+        caption=f"streaming {results} via youtube **djkaykay**")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
