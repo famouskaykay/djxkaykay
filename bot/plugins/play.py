@@ -11,18 +11,18 @@ GROUP_CALLS = {}
 async def help_vc(client, message):
     text = '''====== Help Menu ======
 **Play as Audio**
-- !play __(reply to audio / youtube url / search query)__
+- !pvc __(reply to audio / youtube url / search query)__
 - !radio __(radio stream url)__
 **Play as Video**
-- !stream __(reply to video / youtube url / search query)__
+- !svc __(reply to video / youtube url / search query)__
 - !live __(youtube live stream url)__
 **Extra**
-- !endvc: Leave from vc
+- !lvc: Leave from vc
 - !video: Download url or search query in video format
 - !audio: Download url or search query in audio format'''
     await message.reply(text)
 
-@vcusr.on_message(filters.command("endvc", "!"))
+@vcusr.on_message(filters.command("lvc", "!"))
 async def leave_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
@@ -86,7 +86,7 @@ async def radio_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
     
-@vcusr.on_message(filters.command("play", "!"))
+@vcusr.on_message(filters.command("pvc", "!"))
 async def play_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
@@ -123,7 +123,7 @@ async def play_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
 
-@vcusr.on_message(filters.command("stream", "!"))
+@vcusr.on_message(filters.command("svc", "!"))
 async def stream_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
