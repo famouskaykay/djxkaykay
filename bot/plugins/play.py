@@ -199,9 +199,9 @@ async def stream_vc(client, message):
                 "5️⃣",
             ]
         try:
-            results = YoutubeSearch(query, max_results=1).to_dict()]
+            results = YoutubeSearch(query, max_results=1).to_dict()
             
-            
+#this is fucking boring          
                 
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
         caption=f"streaming {results} via youtube")
