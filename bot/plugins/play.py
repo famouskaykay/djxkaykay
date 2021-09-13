@@ -14,12 +14,13 @@ async def help_vc(client, message):
 - !pvc __(reply to audio / youtube url / search query)__
 - !radio __(radio stream url)__
 **Play as Video**
-- !svc __(reply to video / youtube url / search query)__
+- !svc __(reply to video / youtube url / search query)__ 💗
 - !live __(youtube live stream url)__
 **Extra**
 - !lvc: Leave from vc
 - !video: Download url or search query in video format
-- !audio: Download url or search query in audio format'''
+- !audio: Download url or search query in audio format
+- !skip : Skip streaming file😹'''
     await message.reply(text)
 
 @vcusr.on_message(filters.command("lvc", "!"))
@@ -117,11 +118,27 @@ async def play_vc(client, message):
             await group_call.stop()
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
-        await msg.edit("🚩 __Playing...__")
+        await msg.edit_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        caption="playing requested files")
         await group_call.start_audio(LOCAL_FILE, repeat=False)
     except Exception as e:
         await message.reply(str(e))
         return await group_call.stop()
+    
+@vcusr.on_message(filters.command("skip", "!"))
+async def skip_vc(client, message):
+    if len(music_queue) == 0: return
+    if group_call.is_video_running:
+        await group_call.stop_media()
+    elif group_call.is_audio_running:
+        await group_call.stop_media()
+    elif group_call.is_running:
+        await group_call.stop_media()
+        
+    os.remove(music_queue[0]['source'])
+    music_queue.pop(0)
+    status = await play_or_queue(None, "check", None)
+    os.system(f'echo {status}')
 
 @vcusr.on_message(filters.command("svc", "!"))
 async def stream_vc(client, message):
