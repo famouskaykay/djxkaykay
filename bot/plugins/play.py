@@ -190,7 +190,6 @@ async def stream_vc(client, message):
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
         await msg.delete()
-        j = 0
         emojilist = [
                 "1️⃣",
                 "2️⃣",
@@ -198,7 +197,6 @@ async def stream_vc(client, message):
                 "4️⃣",
                 "5️⃣",
             ]
-    try:
         results = YoutubeSearch(query, max_results=1).to_dict()
             
 #this is fucking boring          
