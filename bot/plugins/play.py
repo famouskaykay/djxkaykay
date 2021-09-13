@@ -140,7 +140,8 @@ async def play_vc(client, message):
             message.from_user.mention()
         ),
         await group_call.start_audio(LOCAL_FILE, repeat=False)
-    except Exception as e:
+                              
+        except Exception as e:
         await message.reply(str(e))
         return await group_call.stop()
     
