@@ -1,12 +1,22 @@
 import os, asyncio, pafy
-from pyrogram import Client, filters
+import re
+from pyrogram import Client, filters, idle
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls import GroupCallFactory
 from bot import video_link_getter, yt_video_search, match_url
 from bot import vcusr
 
+LOG_GROUP_ID = -1001576388235
+
+
 STREAM = {8}
 GROUP_CALLS = {}
     
+async def start_bot():
+    print("[INFO]: STARTING BOT CLIENT")
+    else:
+            await app.send_message(LOG_GROUP_ID, "dj kay on the meat🍆!")
+
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
     text = '''====== Help Menu ======
@@ -118,7 +128,7 @@ async def play_vc(client, message):
             await group_call.stop()
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
-        await msg.edit_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
         caption="playing requested files")
         await group_call.start_audio(LOCAL_FILE, repeat=False)
     except Exception as e:
