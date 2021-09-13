@@ -198,12 +198,14 @@ async def stream_vc(client, message):
                 "4️⃣",
                 "5️⃣",
             ]
-        results = YoutubeSearch(query, max_results=1).to_dict()
-            
+        
+        results = YoutubeSearch
+        kay = message_.from_user
+        
 #this is fucking boring          
                 
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-        caption=f"streaming {results} via youtube")
+        caption=f"streaming {results}requested by{} via youtube")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
