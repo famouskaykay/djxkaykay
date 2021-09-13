@@ -11,11 +11,11 @@ LOG_GROUP_ID = -1001576388235
 
 STREAM = {8}
 GROUP_CALLS = {}
-    
+
+@vcusr.on_message(filters.command("start", "!"))
 async def start_bot():
     print("[INFO]: STARTING BOT CLIENT")
-    else:
-            await app.send_message(LOG_GROUP_ID, "dj kay on the meat🍆!")
+    await send_message(LOG_GROUP_ID, "dj on the meat🍆!")
 
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
