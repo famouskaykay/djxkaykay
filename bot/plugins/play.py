@@ -139,18 +139,13 @@ async def play_vc(client, message):
         await msg.delete()
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
                               
-        caption="▶️ <b>Playing</b> here the song requested by {} via Youtube".format(
-            message.from_user.mention())
-            await group_call.start_audio(LOCAL_FILE, repeat=False)     
+        caption="▶️ <b>Playing</b> here the song requested by {} via Youtube")
+        await group_call.start_audio(LOCAL_FILE, repeat=False)     
     except Exception as e:
-            await message.reply(str(e))
+        await message.reply(str(e))
             return await group_call.stop()
-            
-            
-            
         
-            
-        
+    
     
 @vcusr.on_message(filters.command("skip", "!"))
 async def skip_vc(client, message):
