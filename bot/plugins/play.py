@@ -104,13 +104,16 @@ async def radio_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
     
-@vcusr.on_message(filters.command("pvc", "!"))
+@Client.on_message(filters.command("pvc", "!"))
 async def play_vc(client, message):
-    CHAT_ID = message.chat.id
-    if not str(CHAT_ID).startswith("-100"): return
+    global vc_live
+    if not message.chat.id == CHAT_ID: return
     msg = await message.reply("⏳ __Please wait.__")
+    if vc_live == True:
+        return await msg.edit("💬 __Live or Radio Ongoing. Please stop it via `!endvc`.__")
     media = message.reply_to_message
-    if media:
+    THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = "https://telegra.ph/file/90fd47105dcb364f04b19.jpg", "Music", "Not Found"
+    if media and media.media:
         await msg.edit("📥 __Downloading...__")
         LOCAL_FILE = await client.download_media(media)
     else:
@@ -123,27 +126,20 @@ async def play_vc(client, message):
             if FINAL_URL == 404:
                 return await msg.edit("__No videos found__ 🤷‍♂️")
         await msg.edit("📥 __Downloading...__")
-        LOCAL_FILE = video_link_getter(FINAL_URL, key="a")
+        LOCAL_FILE, THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = video_info_extract(FINAL_URL, key="audio")
         if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️")
          
     try:
-        group_call = GROUP_CALLS.get(CHAT_ID)
-        if group_call is None:
-            group_call = GroupCallFactory(vcusr, outgoing_audio_bitrate_kbit=512).get_group_call()
-            GROUP_CALLS[CHAT_ID] = group_call
-        if group_call.is_connected:
-            await group_call.stop()
-            await asyncio.sleep(3)
-        await group_call.join(CHAT_ID)
-        requested_by = message.from_user.first_name
-        await msg.delete()
-        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-                              
-        caption="▶️ <b>Playing</b> here the song requested by {} via Youtube")
-        await group_call.start_audio(LOCAL_FILE, repeat=False)     
+        post_data = {'LOCAL_FILE':LOCAL_FILE, 'THUMB_URL':THUMB_URL, 'VIDEO_TITLE':VIDEO_TITLE, 'VIDEO_DURATION':VIDEO_DURATION, 'TYPE':'audio'}
+        resp = await play_or_queue("add", post_data)
+        if resp['status'] == 'queue':
+            await msg.edit(resp['msg'])
+        elif resp['status'] == 'play':
+            await msg.delete()
+            await message.reply_photo(resp['thumb'], caption=resp['msg'])
     except Exception as e:
         await message.reply(str(e))
-            return await group_call.stop()
+        return await group_call.stop()
         
     
     
