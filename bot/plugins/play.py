@@ -190,6 +190,7 @@ async def stream_vc(client, message):
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
         await msg.delete()
+        j = 0
         emojilist = [
                 "1️⃣",
                 "2️⃣",
