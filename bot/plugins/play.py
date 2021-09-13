@@ -135,7 +135,7 @@ async def play_vc(client, message):
         await group_call.join(CHAT_ID)
         await msg.delete()
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
-        caption="playing requested files")
+        caption="**Now Playing** in {}".format(message.chat.title)
         await group_call.start_audio(LOCAL_FILE, repeat=False)
     except Exception as e:
         await message.reply(str(e))
