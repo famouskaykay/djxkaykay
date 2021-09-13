@@ -14,6 +14,7 @@ GROUP_CALLS = {}
 
 @vcusr.on_message(filters.command("start", "!"))
 async def start_bot():
+#not yet done
     print("[INFO]: STARTING BOT CLIENT")
     await send_message(LOG_GROUP_ID, "dj on the meat🍆!")
 
@@ -40,7 +41,7 @@ async def leave_vc(client, message):
     group_call = GROUP_CALLS.get(CHAT_ID)
     if group_call:
         await group_call.stop()
-        await message.reply("__Left.__")
+        await message.reply_sticker("CAADAgADOQADfyesDlKEqOOd72VKAg")
 
 @vcusr.on_message(filters.command("live", "!"))
 async def live_vc(client, message):
@@ -66,7 +67,9 @@ async def live_vc(client, message):
             await group_call.stop()
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
-        await msg.edit("🚩 __Live Streaming...__")
+        await msg.delete()
+        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        caption="streaming live from youtube🎬")
         await group_call.start_video(ytlink, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
@@ -91,7 +94,9 @@ async def radio_vc(client, message):
             await group_call.stop()
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
-        await msg.edit("🚩 __Radio Playing...__")
+        await msg.delete()
+        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        caption="streaming radio🎬")
         await group_call.start_audio(INPUT_SOURCE, repeat=False)
     except Exception as e:
         await message.reply(str(e))
@@ -182,7 +187,9 @@ async def stream_vc(client, message):
             await group_call.stop()
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
-        await msg.edit("🚩 Streaming...__")
+        await msg.delete()
+        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        caption="streaming requested files🎬")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
