@@ -200,14 +200,7 @@ async def stream_vc(client, message):
             ]
         try:
             url = f"https://youtube.com{results[0]['url_suffix']}"
-                title = results[0]["title"][:40]
-                thumbnail = results[0]["thumbnails"][0]
-                thumb_name = f"thumb{title}.jpg"
-                thumb = requests.get(thumbnail, allow_redirects=True)
-                open(thumb_name, "wb").write(thumb.content)
-                duration = results[0]["duration"]
                 results[0]["url_suffix"]
-                views = results[0]["views"]
                 
         await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
         caption=f"streaming {results} via youtube")
