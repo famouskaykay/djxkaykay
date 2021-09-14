@@ -69,7 +69,7 @@ async def live_vc(client, message):
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
         await msg.delete()
-        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        await msg.reply_photo("https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg",
         caption="streaming live from youtube🎬")
         await group_call.start_video(ytlink, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
@@ -98,7 +98,7 @@ async def radio_vc(client, message):
             await asyncio.sleep(3)
         await group_call.join(CHAT_ID)
         await msg.delete()
-        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        await msg.reply_photo("https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg",
         caption="streaming radio🎬")
         await group_call.start_audio(INPUT_SOURCE, repeat=False)
     except Exception as e:
@@ -113,7 +113,7 @@ async def play_vc(client, message):
     if vc_live == True:
         return await msg.edit("💬 __Live or Radio Ongoing. Please stop it via `!endvc`.__")
     media = message.reply_to_message
-    THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = "https://telegra.ph/file/90fd47105dcb364f04b19.jpg", "Music", "Not Found"
+    THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg", "Music", "Not Found"
     if media and media.media:
         await msg.edit("📥 __Downloading...__")
         LOCAL_FILE = await client.download_media(media)
@@ -203,7 +203,7 @@ async def stream_vc(client, message):
         
 #this is fucking boring          
                 
-        await msg.reply_photo("https://telegra.ph/file/90fd47105dcb364f04b19.jpg",
+        await msg.reply_photo("https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg",
         caption=f"streaming {results} via youtube **djkaykay**")
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
