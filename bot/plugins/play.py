@@ -42,7 +42,7 @@ async def leave_vc(client, message):
     group_call = GROUP_CALLS.get(CHAT_ID)
     if group_call:
         await group_call.stop()
-        await message.reply_sticker("CAADBQADCAMAAtFreFVNNKAMgNe-YwI")
+        await message.reply_sticker("CAACAgQAAx0EXywg7AACL7xhT4VlisW_T9kpVX3byseUq6OnugACDAkAAr6VeFLAiBqMdrNi2B4E")
 
 @vcusr.on_message(filters.command("live", "!"))
 async def live_vc(client, message):
