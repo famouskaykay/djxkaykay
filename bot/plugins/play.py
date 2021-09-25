@@ -14,14 +14,14 @@ STREAM = {8}
 GROUP_CALLS = {}
 
 @vcusr.on_message(filters.command("start", "!"))
-async def start_bot():
+async def start(client, message):
+    text = "djkaykay is online"
 #not yet done
-    print("[INFO]: STARTING BOT CLIENT")
-    await send_message(LOG_GROUP_ID, "dj on the meat🍆!")
+   
 
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
-    text = '''====== Help Menu ======
+    text = '''====== **Djxkaykay Help Menu** ======
 **Play as Audio**
 - !pvc __(reply to audio / youtube url / search query)__
 - !radio __(radio stream url)__
@@ -128,7 +128,7 @@ async def play_vc(client, message):
                 return await msg.edit("__No videos found__ 🤷‍♂️")
         await msg.edit("📥 __Downloading...__")
         LOCAL_FILE, THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = video_info_extract(FINAL_URL, key="audio")
-        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️")
+        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️ report this to @KayAspirerProject")
          
     try:
         post_data = {'LOCAL_FILE':LOCAL_FILE, 'THUMB_URL':THUMB_URL, 'VIDEO_TITLE':VIDEO_TITLE, 'VIDEO_DURATION':VIDEO_DURATION, 'TYPE':'audio'}
@@ -179,7 +179,7 @@ async def stream_vc(client, message):
                 return await msg.edit("__No videos found__ 🤷‍♂️")
         await msg.edit("📥 __Downloading...__")
         LOCAL_FILE = video_link_getter(FINAL_URL, key="v")
-        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️")
+        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️ report this to @KayAspirerProject")
          
     try:
         group_call = GROUP_CALLS.get(CHAT_ID)
