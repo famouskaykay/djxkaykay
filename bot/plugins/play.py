@@ -1,10 +1,16 @@
 import os, asyncio, pafy
 import re
+import sys
+import time
+import ffmpeg
+import subprocess
+from asyncio import sleep
 from pyrogram import Client, filters, idle
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls import GroupCallFactory
 from bot import video_link_getter, yt_video_search, match_url
 from bot import vcusr
+from helpers.decorators import authorized_users_only
 from youtube_search import YoutubeSearch
 
 LOG_GROUP_ID = -1001576388235
@@ -36,15 +42,17 @@ async def help_vc(client, message):
     await message.reply(text)
 
 @vcusr.on_message(filters.command("lvc", "!"))
+@authorized_users_only
 async def leave_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
     group_call = GROUP_CALLS.get(CHAT_ID)
     if group_call:
         await group_call.stop()
-        await message.reply_sticker("CAACAgQAAx0EXywg7AACL7xhT4VlisW_T9kpVX3byseUq6OnugACDAkAAr6VeFLAiBqMdrNi2B4E")
+        await message.reply_text(f"✅ **Streaming Stopped & Left The Video Chat !**")
 
 @vcusr.on_message(filters.command("live", "!"))
+@authorized_users_only
 async def live_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
@@ -77,6 +85,7 @@ async def live_vc(client, message):
         return await group_call.stop()
 
 @vcusr.on_message(filters.command("radio", "!"))
+@authorized_users_only
 async def radio_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
@@ -106,6 +115,7 @@ async def radio_vc(client, message):
         return await group_call.stop()
     
 @Client.on_message(filters.command("pvc", "!"))
+@authorized_users_only
 async def play_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
