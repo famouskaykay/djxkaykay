@@ -23,7 +23,7 @@ GROUP_CALLS = {}
 async def start(client, message):
     text = "djkaykay is online"
 #not yet done
-   
+   await message.reply(text)
 
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
@@ -52,7 +52,6 @@ async def leave_vc(client, message):
         await message.reply_text(f"✅ **Streaming Stopped & Left The Video Chat !**")
 
 @vcusr.on_message(filters.command("live", "!"))
-@authorized_users_only
 async def live_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
@@ -85,7 +84,6 @@ async def live_vc(client, message):
         return await group_call.stop()
 
 @vcusr.on_message(filters.command("radio", "!"))
-@authorized_users_only
 async def radio_vc(client, message):
     CHAT_ID = message.chat.id
     if not str(CHAT_ID).startswith("-100"): return
