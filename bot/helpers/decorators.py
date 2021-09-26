@@ -2,7 +2,7 @@ from typing import Callable
 from pyrogram import Client
 from bot.config import SUDO_USERS
 from pyrogram.types import Message
-from helpers.admins import get_administrators
+from bot.helpers.admins import get_administrators
 
 
 def errors(func: Callable) -> Callable:
