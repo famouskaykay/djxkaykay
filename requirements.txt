@@ -7,3 +7,6 @@ asyncio
 pytgcalls==3.0.0.dev19
 youtube_search
 git+https://github.com/pyrogram/pyrogram@master
+python-dotenv
+ffmpeg-python
+requests
