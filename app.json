@@ -7,6 +7,7 @@
       "voicechat",
       "bot"
     ],
+    
     "env": {
       "API_ID": {
         "description": "Your API ID from https://my.telegram.org",
@@ -14,6 +15,10 @@
       },
       "API_HASH": {
         "description": "Your API HASH from https://my.teleram.org",
+        "required": true
+      },
+      "SUDO_USERS": {
+        "description": "ID of Sudo Users who can use Admin commands (for multiple users seperated by space)",
         "required": true
       },
       "SESSION": {
