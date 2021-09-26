@@ -19,11 +19,6 @@ LOG_GROUP_ID = -1001576388235
 STREAM = {8}
 GROUP_CALLS = {}
 
-@vcusr.on_message(filters.command("start", "!"))
-async def start(client, message):
-    text = "djkaykay is online"
-#not yet done
-   await message.reply(text)
 
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
