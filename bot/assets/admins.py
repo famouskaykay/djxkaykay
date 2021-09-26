@@ -1,4 +1,4 @@
-from config import admins
+from bot.config import admins
 from typing import Dict, List
 
 admins: Dict[int, List[int]] = {}
