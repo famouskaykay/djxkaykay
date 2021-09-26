@@ -1,9 +1,9 @@
 import time
-import assets.admins
+from bot.assets import admins
 from typing import List
-from assets.admins import set
+from bot.assets.admins import set
 from pyrogram.types import Chat
-from assets.admins import get as gett
+from bot.assets.admins import get as gett
 
 
 async def get_administrators(chat: Chat) -> List[int]:
