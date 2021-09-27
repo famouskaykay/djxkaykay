@@ -10,4 +10,4 @@ bot = Client(
 bot.start()
 ok = bot.get_me()
 USERNAME = ok
-BOT_NAME = ok.first_name
+BOT_NAME = ok
