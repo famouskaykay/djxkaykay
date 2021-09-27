@@ -13,6 +13,14 @@
         "description": "Your API ID from https://my.telegram.org",
         "required": true
       },
+      "BOT_TOKEN": {
+        "description": "Your Telegram Bot Token, get it from @Botfather XD",
+        "required": true
+      },
+      "ASSISTANT_NAME": {
+        "description": "Your Video Player's assistant Username without @.",
+        "required": true
+      },
       "API_HASH": {
         "description": "Your API HASH from https://my.teleram.org",
         "required": true
