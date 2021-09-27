@@ -13,6 +13,7 @@ from bot import vcusr
 from bot.helpers.decorators import authorized_users_only
 from youtube_search import YoutubeSearch
 from bot.config import AUDIO_CALL, VIDEO_CALL
+from pyrogram.types import Message
 
 
 
