@@ -1,5 +1,5 @@
 from pyrogram import Client
-from bot.config import API_ID, API_HASH, BOT_TOKEN
+from config import API_ID, API_HASH, BOT_TOKEN
 
 bot = Client(
     "VideoPlayer",
@@ -9,5 +9,5 @@ bot = Client(
 )
 bot.start()
 ok = bot.get_me()
-USERNAME = ok
-BOT_NAME = ok
+USERNAME = ok.username
+BOT_NAME = ok.first_name
