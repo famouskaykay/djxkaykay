@@ -21,6 +21,59 @@ LOG_GROUP_ID = -1001576388235
 STREAM = {8}
 GROUP_CALLS = {}
 
+@vcusr.on_message(filters.command(["pause", f"pause@{USERNAME}"]) & filters.group & ~filters.edited)
+@authorized_users_only
+async def pause(_, m: Message):
+    chat_id = m.chat.id
+
+    if chat_id in AUDIO_CALL:
+        await AUDIO_CALL[chat_id].set_audio_pause(True)
+        await m.reply_text("⏸ **Paused Audio Streaming !**")
+
+    elif chat_id in VIDEO_CALL:
+        await VIDEO_CALL[chat_id].set_video_pause(True)
+        await m.reply_text("⏸ **Paused Video Streaming !**")
+
+    else:
+        await m.reply_text("❌ **Noting Is Streaming !**")
+
+
+@vcusr.on_message(filters.command(["resume", f"resume@{USERNAME}"]) & filters.group & ~filters.edited)
+@authorized_users_only
+async def resume(_, m: Message):
+    chat_id = m.chat.id
+
+    if chat_id in AUDIO_CALL:
+        await AUDIO_CALL[chat_id].set_audio_pause(False)
+        await m.reply_text("▶️ **Resumed Audio Streaming !**")
+
+    elif chat_id in VIDEO_CALL:
+        await VIDEO_CALL[chat_id].set_video_pause(False)
+        await m.reply_text("▶️ **Resumed Video Streaming !**")
+
+    else:
+        await m.reply_text("❌ **Noting Is Streaming !**")
+
+
+@vcusr.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]) & filters.group & ~filters.edited)
+@authorized_users_only
+async def endstream(client, m: Message):
+    msg = await m.reply_text("🔄 `Processing ...`")
+    chat_id = m.chat.id
+
+    if chat_id in AUDIO_CALL:
+        await AUDIO_CALL[chat_id].stop()
+        AUDIO_CALL.pop(chat_id)
+        await msg.edit("⏹️ **Stopped Audio Streaming !**")
+
+    elif chat_id in VIDEO_CALL:
+        await VIDEO_CALL[chat_id].stop()
+        VIDEO_CALL.pop(chat_id)
+        await msg.edit("⏹️ **Stopped Video Streaming !**")
+
+    else:
+        await msg.edit("🤖 **Please Start An Stream First !**")
+
 
 @vcusr.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
@@ -289,3 +342,15 @@ async def stream_vc(client, message):
     except Exception as e:
         await message.reply(str(e))
         return await group_call.stop()
+    
+@group_call.on_audio_playout_ended
+async def audio_ended_handler(_, __):
+    await sleep(3)
+    await group_call.stop()
+    print(f"[INFO] - AUDIO_CALL ENDED !")
+
+@group_call.on_video_playout_ended
+async def video_ended_handler(_, __):
+    await sleep(3)
+    await group_call.stop()
+    print(f"[INFO] - VIDEO_CALL ENDED !")
