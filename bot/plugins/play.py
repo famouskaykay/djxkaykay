@@ -6,12 +6,14 @@ import ffmpeg
 import subprocess
 from asyncio import sleep
 from pyrogram import Client, filters, idle
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pytgcalls import GroupCallFactory
 from bot import video_link_getter, yt_video_search, match_url
 from bot import vcusr
 from bot.helpers.decorators import authorized_users_only
 from youtube_search import YoutubeSearch
+from bot.config import AUDIO_CALL, VIDEO_CALL
+
 
 LOG_GROUP_ID = -1001576388235
 
@@ -162,6 +164,62 @@ async def skip_vc(client, message):
     status = await play_or_queue(None, "check", None)
     os.system(f'echo {status}')
 
+@vcusr.on_callback_query(filters.regex("resume_callback"))
+async def resume_callbacc(client, CallbackQuery):
+    CHAT_ID = CallbackQuery.message.chat.id
+    if CHAT_ID in AUDIO_CALL:
+        text = f"▶️ Resumed !"
+        await AUDIO_CALL[chat_id].set_audio_pause(False)
+    elif CHAT_ID in VIDEO_CALL:
+        text = f"▶️ Resumed !"
+        await VIDEO_CALL[CHAT_ID].set_video_pause(False)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )    
+   
+
+@vcusr.on_callback_query(filters.regex("pause_callback"))
+async def pause_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in AUDIO_CALL:
+        text = f"⏸ Paused !"
+        await AUDIO_CALL[chat_id].set_audio_pause(True)
+    elif chat_id in VIDEO_CALL:
+        text = f"⏸ Paused !"
+        await VIDEO_CALL[chat_id].set_video_pause(True)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+
+
+@vcusr.on_callback_query(filters.regex("end_callback"))
+async def end_callbacc(client, CallbackQuery):
+    CHAT_ID = CallbackQuery.message.chat.id
+    if CHAT_ID in AUDIO_CALL:
+        text = f"⏹️ Stopped !"
+        await AUDIO_CALL[CHAT_ID].stop()
+        AUDIO_CALL.pop(CHAT_ID)
+    elif CHAT_ID in VIDEO_CALL:
+        text = f"⏹️ Stopped !"
+        await VIDEO_CALL[CHAT_ID].stop()
+        VIDEO_CALL.pop(CHAT_ID)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+    await Client.send_message(
+        CHAT_ID=CallbackQuery.message.chat.id,
+        text=f"✅ **Streaming Stopped & Left The Video Chat !**"
+    )
+    await CallbackQuery.message.delete()
+    
+    
+    
 @vcusr.on_message(filters.command("svc", "!"))
 async def stream_vc(client, message):
     CHAT_ID = message.chat.id
@@ -173,7 +231,7 @@ async def stream_vc(client, message):
         LOCAL_FILE = await client.download_media(media)
     else:
         try: INPUT_SOURCE = message.text.split(" ", 1)[1]
-        except IndexError: return await msg.edit("🔎 __Give me a URL or Search Query. Look__ `!help`")
+        except IndexError: return await msg.edit("🔎 __Give me a URL or Search Query. Look__ ` for !help`")
         if ("youtube.com" in INPUT_SOURCE) or ("youtu.be" in INPUT_SOURCE):
             FINAL_URL = INPUT_SOURCE
         else:
@@ -207,7 +265,26 @@ async def stream_vc(client, message):
 #this is fucking boring          
                 
         await msg.reply_photo("https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg",
-        caption=f"streaming {results} via youtube **djkaykay**")
+        caption=f"streaming {results} via youtube **djkaykay**",
+        reply_markup=InlineKeyboardMarkup(
+               [
+                   [
+                       InlineKeyboardButton(
+                          text="⏸",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="▶️",
+                          callback_data="resume_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="⏹️",
+                          callback_data="end_callback",
+                       ),
+                   ],
+               ]),
+            )                    
+                              
         await group_call.start_video(LOCAL_FILE, repeat=False, enable_experimental_lip_sync=True)
     except Exception as e:
         await message.reply(str(e))
