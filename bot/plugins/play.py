@@ -320,7 +320,7 @@ async def stream_vc(client, message):
         
 #this is fucking boring          
                 
-        await msg.reply_photo("https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg",
+        await msg.reply_photo(photo=thumb,
         caption=f"streaming {results} via youtube **djkaykay**",
         reply_markup=InlineKeyboardMarkup(
                [
