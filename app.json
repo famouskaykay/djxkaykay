@@ -5,7 +5,13 @@
     "keywords": [
       "telegram",
       "voicechat",
-      "bot"
+      "bot",
+      "video",
+      "player",
+      "python",
+      "pyrogram",
+      "pytgcalls",
+      "videoplayer"
     ],
     
     "env": {
