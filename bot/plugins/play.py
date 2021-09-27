@@ -13,7 +13,7 @@ from bot import vcusr
 from bot.helpers.decorators import authorized_users_only
 from youtube_search import YoutubeSearch
 from bot.config import AUDIO_CALL, VIDEO_CALL
-from bot.helpers.bot_utils import USERNAME
+
 
 
 LOG_GROUP_ID = -1001576388235
@@ -22,7 +22,7 @@ LOG_GROUP_ID = -1001576388235
 STREAM = {8}
 GROUP_CALLS = {}
 
-@vcusr.on_message(filters.command(["pause", f"pause@{USERNAME}"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def pause(_, m: Message):
     chat_id = m.chat.id
@@ -39,7 +39,7 @@ async def pause(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-@vcusr.on_message(filters.command(["resume", f"resume@{USERNAME}"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def resume(_, m: Message):
     chat_id = m.chat.id
@@ -56,7 +56,7 @@ async def resume(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-@vcusr.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def endstream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
