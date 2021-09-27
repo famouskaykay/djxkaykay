@@ -317,7 +317,7 @@ async def stream_vc(client, message):
             ]
         
         results = YoutubeSearch
-        
+        thumb = "https://telegra.ph/file/90fd47105dcb364f04b19.jpg"
 #this is fucking boring          
                 
         await msg.reply_photo(photo=thumb,
