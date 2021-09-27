@@ -16,7 +16,7 @@ from bot.config import AUDIO_CALL, VIDEO_CALL
 from pyrogram.types import Message
 
 
-group_call = GroupCallFactory(User, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
+group_call = GroupCallFactory(GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
 
 LOG_GROUP_ID = -1001576388235
 
