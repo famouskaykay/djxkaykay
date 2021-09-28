@@ -16,6 +16,12 @@ from bot.config import AUDIO_CALL, VIDEO_CALL
 from pyrogram.types import Message
 
 
+ydl_opts = {
+        "quiet": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+}
+ydl = YoutubeDL(ydl_opts)
 group_call = GroupCallFactory(GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
 
 LOG_GROUP_ID = -1001576388235
