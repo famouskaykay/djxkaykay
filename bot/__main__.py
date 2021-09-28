@@ -21,7 +21,9 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 if __name__ == "__main__" :
     vcusr.run()
+    kay.start()
+    idle()
+    Bot.stop()
 
-kay.start()
-idle()
-Bot.stop()
+
+
