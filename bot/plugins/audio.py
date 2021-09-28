@@ -7,14 +7,13 @@ import subprocess
 from asyncio import sleep
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from bot.helpers.bot_utils import USERNAME
 from bot.config import AUDIO_CALL, VIDEO_CALL
 from bot.plugins.play import ydl, group_call
 from bot.helpers.decorators import authorized_users_only, sudo_users_only
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from bot import kay
 
-@Client.on_message(filters.command(["play", f"play@{USERNAME}"]) & filters.group & ~filters.edited)
+@Client.on_message(filters.command(["play"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def play(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
@@ -148,7 +147,7 @@ async def play(client, m: Message):
     )
 
 
-@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]))
+@Client.on_message(filters.command(["restart"]))
 @sudo_users_only
 async def restart(client, m: Message):
     k = await m.reply_text("🔄 `Restarting ...`")
