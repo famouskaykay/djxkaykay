@@ -31,7 +31,7 @@ opts = {"format": "best[height=?480]/best", "noplaylist": True}
 ydl = YoutubeDL(opts)
 
 
-@Client.on_message(filters.command("stream"))
+@Client.on_message(filters.command("svc" "!"))
 @authorized_users_only
 async def stream(client, m: Message):
     replied = m.reply_to_message
@@ -61,7 +61,7 @@ async def stream(client, m: Message):
                     return
             else:
                 livelink = query
-                photoid = "https://telegra.ph/file/b10a65c868444c0611773.jpg"
+                photoid = "https://telegra.ph/file/e99abb7d003b1a5ead17e.jpg"
                 msg = await m.reply_photo(photo=photoid, caption="`Starting Video Stream...`")
                     
             chat_id = m.chat.id
@@ -103,7 +103,7 @@ async def stream(client, m: Message):
             umm = await client.download_media(huehue['file_id'])
             photoid = umm
         else:
-            photoid = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
+            photoid = "https://telegra.ph/file/e99abb7d003b1a5ead17e.jpg"
         msg = await m.reply_photo(photo=photoid, caption="`Downloading...`")
         video = await client.download_media(m.reply_to_message)
         chat_id = m.chat.id
