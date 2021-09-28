@@ -13,7 +13,7 @@ from bot.helpers.decorators import authorized_users_only, sudo_users_only
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from bot import kay
 
-@Client.on_message(filters.command(["play"]) & filters.group & ~filters.edited)
+@kay.on_message(filters.command(["play"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def play(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
@@ -107,7 +107,7 @@ async def play(client, m: Message):
             await group_call.start_audio(audio, repeat=False)
             AUDIO_CALL[chat_id] = group_call
             await msg.delete()
-            await m.reply_text(f"▶️ **Started [Audio Streaming](https://t.me/AsmSafone) In {m.chat.title} !**",
+            await m.reply_text(f"▶️ **Started [Audio Streaming](https://t.me/famouskaykay3) In {m.chat.title} !**",
                reply_markup=InlineKeyboardMarkup(
                [
                    [
@@ -147,13 +147,13 @@ async def play(client, m: Message):
     )
 
 
-@Client.on_message(filters.command(["restart"]))
+@kay.on_message(filters.command(["restart"]))
 @sudo_users_only
 async def restart(client, m: Message):
     k = await m.reply_text("🔄 `Restarting ...`")
     await sleep(3)
     os.execl(sys.executable, sys.executable, *sys.argv)
     try:
-        await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For More!**")
+        await k.edit("✅ **Restarted Successfully! **")
     except:
         pass
