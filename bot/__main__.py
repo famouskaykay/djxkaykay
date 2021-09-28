@@ -23,3 +23,5 @@ if __name__ == "__main__" :
     vcusr.run()
 
 kay.start()
+idle()
+Bot.stop()
