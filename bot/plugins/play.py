@@ -1,296 +1,272 @@
 import os
 import re
-import sys
-import time
-import ffmpeg
 import asyncio
 import subprocess
-from asyncio import sleep
-from youtube_dl import YoutubeDL
+from pytgcalls import idle
+from pytgcalls import PyTgCalls
+from pytgcalls import StreamType
+from pytgcalls.types.input_stream import AudioParameters
+from pytgcalls.types.input_stream import InputAudioStream
+from pytgcalls.types.input_stream import InputVideoStream
+from pytgcalls.types.input_stream import VideoParameters
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pytgcalls import GroupCallFactory
-from bot.config import AUDIO_CALL, VIDEO_CALL
+from config import API_ID, API_HASH, SESSION_NAME,ADMIN,CHANNEL
+from helper.decorators import authorized_users_only
+from youtube_dl import YoutubeDL
 from youtubesearchpython import VideosSearch
-from bot.helpers.decorators import authorized_users_only
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
-from bot import vcusr
-
-ydl_opts = {
-        "quiet": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-}
-ydl = YoutubeDL(ydl_opts)
-group_call = GroupCallFactory(GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
-
-LOG_GROUP_ID = -1001576388235
-
-
-STREAM = {8}
-GROUP_CALLS = {}
-
-@vcusr.on_callback_query(filters.regex("end_callback"))
-async def end_callbacc(client, CallbackQuery):
-    chat_id = CallbackQuery.message.chat.id
-    if chat_id in AUDIO_CALL:
-        text = f"⏹️ Stopped !"
-        await AUDIO_CALL[chat_id].stop()
-        AUDIO_CALL.pop(chat_id)
-    elif chat_id in VIDEO_CALL:
-        text = f"⏹️ Stopped !"
-        await VIDEO_CALL[chat_id].stop()
-        VIDEO_CALL.pop(chat_id)
-    else:
-        text = f"❌ Nothing is Playing !"
-    await Client.answer_callback_query(
-        CallbackQuery.id, text, show_alert=True
+app = Client(SESSION_NAME, API_ID, API_HASH)
+call_py = PyTgCalls(app)
+FFMPEG_PROCESSES = {}
+def raw_converter(dl, song, video):
+    subprocess.Popen(
+        ['ffmpeg', '-i', dl, '-f', 's16le', '-ac', '1', '-ar', '48000', song, '-y', '-f', 'rawvideo', '-r', '20', '-pix_fmt', 'yuv420p', '-vf', 'scale=640:360', video, '-y'],
+        stdin=None,
+        stdout=None,
+        stderr=None,
+        cwd=None,
     )
-    await Client.send_message(
-        chat_id=CallbackQuery.message.chat.id,
-        text=f"✅ **Streaming Stopped & Left The Video Chat !**"
-    )
-    await CallbackQuery.message.delete()
+opts = {"format": "best[height=?480]/best", "noplaylist": True}
+ydl = YoutubeDL(opts)
 
 
-@vcusr.on_message(filters.command(["svc"]) & filters.group & ~filters.edited)
+@Client.on_message(filters.command("stream"))
 @authorized_users_only
 async def stream(client, m: Message):
-    msg = await m.reply_text("🔄 `Processing ...`")
-    chat_id = m.chat.id
-    media = m.reply_to_message
-    if not media and not ' ' in m.text:
-        try: INPUT_SOURCE = m.text.split(" ", 1)[1]
-        except IndexError: return await msg.edit("🔎 __Give me a URL or Search Query. Look__ ` for /help`")
-        if ("youtube.com" in INPUT_SOURCE) or ("youtu.be" in INPUT_SOURCE):
-            FINAL_URL = INPUT_SOURCE
+    replied = m.reply_to_message
+    if not replied:
+        if len(m.command) < 2:
+            await m.reply("`Reply to some Video File!`")
         else:
-            FINAL_URL = yt_video_search(INPUT_SOURCE)
-            if FINAL_URL == 404:
-                return await msg.edit("__No videos found__ 🤷‍♂️")
-        await msg.edit("📥 __Downloading...__")
-        LOCAL_FILE = video_link_getter(FINAL_URL, key="v")
-        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️ report this to @KayAspirerProject")
-         
-    try:
-        group_call = GROUP_CALLS.get(CHAT_ID)
-        if group_call is None:
-            group_call = GroupCallFactory(vcusr, outgoing_audio_bitrate_kbit=512).get_group_call()
-            GROUP_CALLS[CHAT_ID] = group_call
-        if group_call.is_connected:
-            await group_call.stop()
-            await asyncio.sleep(3)
-        await group_call.join(CHAT_ID)
-        await msg.delete()
-
-    elif ' ' in m.text:
-        text = m.text.split(' ', 1)
-        query = text[1]
-        if not 'http' in query:
-            return await msg.edit("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
-        regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
-        match = re.match(regex, query)
-        if match:
-            await msg.edit("🔄 `Starting YouTube Video Stream ...`")
+            query = m.text.split(None, 1)[1]
+            regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
+            match = re.match(regex,query)
+            if match:
+                try:
+                    meta = ydl.extract_info(query, download=False)
+                    formats = meta.get('formats', [meta])
+                    for f in formats:
+                        ytstreamlink = f['url']
+                    livelink = ytstreamlink
+                    search = VideosSearch(query, limit=1)
+                    opp = search.result()["result"]
+                    oppp = opp[0]
+                    thumbid = oppp["thumbnails"][0]["url"]
+                    split = thumbid.split("?")
+                    photoid = split[0].strip()
+                    msg = await m.reply_photo(photo=photoid, caption="`Starting YT Stream...`")
+                except Exception as e:
+                    msg = await m.reply(f"{e}")
+                    return
+            else:
+                livelink = query
+                photoid = "https://telegra.ph/file/b10a65c868444c0611773.jpg"
+                msg = await m.reply_photo(photo=photoid, caption="`Starting Video Stream...`")
+                    
+            chat_id = m.chat.id
+            process = raw_converter(livelink, f'audio{chat_id}.raw', f'video{chat_id}.raw')
+            FFMPEG_PROCESSES[chat_id] = process
+            await asyncio.sleep(10)
             try:
-                meta = ydl.extract_info(query, download=False)
-                formats = meta.get('formats', [meta])
-                for f in formats:
-                    ytstreamlink = f['url']
-                link = ytstreamlink
-                search = VideosSearch(query, limit=1)
-                opp = search.result()["result"]
-                oppp = opp[0]
-                thumbid = oppp["thumbnails"][0]["url"]
-                split = thumbid.split("?")
-                thumb = split[0].strip()
-            except Exception as e:
-                return await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
-        
-                print(e)
-
-        else:
-            await msg.edit("🔄 `Starting Live Video Stream ...`")
-            link = query
-            thumb = "https://telegra.ph/file/3e14128ad5c9ec47801bd.jpg"
-
-        vid_call = VIDEO_CALL.get(chat_id)
-        if vid_call:
-            await VIDEO_CALL[chat_id].stop()
-            VIDEO_CALL.pop(chat_id)
-            await sleep(3)
-
-        aud_call = AUDIO_CALL.get(chat_id)
-        if aud_call:
-            await AUDIO_CALL[chat_id].stop()
-            AUDIO_CALL.pop(chat_id)
-            await sleep(3)
-
-        try:
-            await sleep(2)
-            await group_call.join(chat_id)
-            await group_call.start_video(link, with_audio=True, repeat=False)
-            VIDEO_CALL[chat_id] = group_call
-            await msg.delete()
-            await m.reply_photo(
-               photo=thumb, 
-               caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**",
-               reply_markup=InlineKeyboardMarkup(
-               [
-                   [
-                       InlineKeyboardButton(
-                          text="⏸",
-                          callback_data="pause_callback",
-                       ),
-                       InlineKeyboardButton(
-                          text="▶️",
-                          callback_data="resume_callback",
-                       ),
-                       InlineKeyboardButton(
-                          text="⏹️",
-                          callback_data="end_callback",
-                       ),
-                   ],
-               ]),
-            )
-        except Exception as e:
-            await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
-
-    elif media.video or media.document:
-        await msg.edit("🔄 `Downloading ...`")
-        if media.video.thumbs:
-            lol = media.video.thumbs[0]
-            lel = await client.download_media(lol['file_id'])
-            thumb = lel
-        else:
-            thumb = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
-        video = await client.download_media(media)
-
-        vid_call = VIDEO_CALL.get(chat_id)
-        if vid_call:
-            await VIDEO_CALL[chat_id].stop()
-            VIDEO_CALL.pop(chat_id)
-            await sleep(3)
-
-        aud_call = AUDIO_CALL.get(chat_id)
-        if aud_call:
-            await AUDIO_CALL[chat_id].stop()
-            AUDIO_CALL.pop(chat_id)
-            await sleep(3)
-
-        try:
-            await sleep(2)
-            await group_call.join(chat_id)
-            await group_call.start_video(video, with_audio=True, repeat=False)
-            VIDEO_CALL[chat_id] = group_call
-            await msg.delete()
-            await m.reply_photo(
-               photo=thumb,
-               caption=f"▶️ **Started [Video Streaming](https://t.me/famouskaykay3) In {m.chat.title} !**",
-               reply_markup=InlineKeyboardMarkup(
-               [
-                   [
-                       InlineKeyboardButton(
-                          text="⏸",
-                          callback_data="pause_callback",
-                       ),
-                       InlineKeyboardButton(
-                          text="▶️",
-                          callback_data="resume_callback",
-                       ),
-                       InlineKeyboardButton(
-                          text="⏹️",
-                          callback_data="end_callback",
-                       ),
-                   ],
-               ]),
-            )
-        except Exception as e:
-            await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
-
-    else:
-        await msg.edit(
-            "💁🏻‍♂️ Do you want to search for a YouTube video?",
-            reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "✅ Yes", switch_inline_query_current_chat=""
+                audio_file = f'audio{chat_id}.raw'
+                video_file = f'video{chat_id}.raw'
+                while not os.path.exists(audio_file) or \
+                        not os.path.exists(video_file):
+                    await asyncio.sleep(2)
+                await call_py.join_group_call(
+                    chat_id,
+                    InputAudioStream(
+                        audio_file,
+                        AudioParameters(
+                            bitrate=48000,
+                        ),
                     ),
-                    InlineKeyboardButton(
-                        "No ❌", callback_data="close"
-                    )
-                ]
-            ]
-        )
-    )
-
-
-@vcusr.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
-@authorized_users_only
-async def pause(_, m: Message):
-    chat_id = m.chat.id
-
-    if chat_id in AUDIO_CALL:
-        await AUDIO_CALL[chat_id].set_audio_pause(True)
-        await m.reply_text("⏸ **Paused Audio Streaming !**")
-
-    elif chat_id in VIDEO_CALL:
-        await VIDEO_CALL[chat_id].set_video_pause(True)
-        await m.reply_text("⏸ **Paused Video Streaming !**")
-
+                    InputVideoStream(
+                        video_file,
+                        VideoParameters(
+                            width=640,
+                            height=360,
+                            frame_rate=20,
+                        ),
+                    ),
+                    stream_type=StreamType().local_stream,
+                )
+                await msg.edit_caption(f"**Started [Video Stream]({livelink}) !**")
+                await idle()
+            except Exception as e:
+                await msg.edit_caption(f"**Error** -- `{e}`")
+   
+    elif replied.video or replied.document:
+        if replied.video.thumbs:
+            huehue = replied.video.thumbs[0]
+            umm = await client.download_media(huehue['file_id'])
+            photoid = umm
+        else:
+            photoid = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
+        msg = await m.reply_photo(photo=photoid, caption="`Downloading...`")
+        video = await client.download_media(m.reply_to_message)
+        chat_id = m.chat.id
+        await msg.edit_caption("`Processing...`")
+        os.system(f"ffmpeg -i '{video}' -f s16le -ac 1 -ar 48000 'audio{chat_id}.raw' -y -f rawvideo -r 20 -pix_fmt yuv420p -vf scale=640:360 'video{chat_id}.raw' -y")
+        try:
+            audio_file = f'audio{chat_id}.raw'
+            video_file = f'video{chat_id}.raw'
+            while not os.path.exists(audio_file) or \
+                    not os.path.exists(video_file):
+                await asyncio.sleep(2)
+            await call_py.join_group_call(
+                chat_id,
+                InputAudioStream(
+                    audio_file,
+                    AudioParameters(
+                        bitrate=48000,
+                    ),
+                ),
+                InputVideoStream(
+                    video_file,
+                    VideoParameters(
+                        width=640,
+                        height=360,
+                        frame_rate=20,
+                    ),
+                ),
+                stream_type=StreamType().local_stream,
+            )
+            await msg.edit_caption("**Started Video Stream!**")
+        except Exception as e:
+            await msg.edit_caption(f"**Error** -- `{e}`")
+            await idle()
     else:
-        await m.reply_text("❌ **Noting Is Streaming !**")
-        
-        
-        
+        await m.reply("`Reply to some Video!`")
 
-@vcusr.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
+@Client.on_message(filters.command("stopstream"))
 @authorized_users_only
-async def resume(_, m: Message):
+async def stopvideo(client, m: Message):
     chat_id = m.chat.id
-
-    if chat_id in AUDIO_CALL:
-        await AUDIO_CALL[chat_id].set_audio_pause(False)
-        await m.reply_text("▶️ **Resumed Audio Streaming !**")
-
-    elif chat_id in VIDEO_CALL:
-        await VIDEO_CALL[chat_id].set_video_pause(False)
-        await m.reply_text("▶️ **Resumed Video Streaming !**")
-
-    else:
-        await m.reply_text("❌ **Noting Is Streaming !**")
-
-
-@vcusr.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
-@authorized_users_only
-async def endstream(client, m: Message):
-    msg = await m.reply_text("🔄 `Processing ...`")
-    chat_id = m.chat.id
-
-    if chat_id in AUDIO_CALL:
-        await AUDIO_CALL[chat_id].stop()
-        AUDIO_CALL.pop(chat_id)
-        await msg.edit("⏹️ **Stopped Audio Streaming !**")
-
-    elif chat_id in VIDEO_CALL:
-        await VIDEO_CALL[chat_id].stop()
-        VIDEO_CALL.pop(chat_id)
-        await msg.edit("⏹️ **Stopped Video Streaming !**")
-
-    else:
-        await msg.edit("🤖 **Please Start An Stream First !**")
-
+    try:
+        process = FFMPEG_PROCESSES.get(chat_id)
+        if process:
+            try:
+                process.send_signal(SIGINT)
+                await asyncio.sleep(3)
+            except Exception as e:
+                print(e)
+        await call_py.leave_group_call(chat_id)
+        await m.reply("**⏹️ Stop Video Stream!**")
+    except Exception as e:
+        await m.reply(f"**🚫 Error** - `{e}`")
         
-@group_call.on_audio_playout_ended
-async def audio_ended_handler(_, __):
-    await sleep(3)
-    await group_call.stop()
-    print(f"[INFO] - AUDIO_CALL ENDED !")
 
-@group_call.on_video_playout_ended
-async def video_ended_handler(_, __):
-    await sleep(3)
-    await group_call.stop()
-    print(f"[INFO] - VIDEO_CALL ENDED !")
+#channel Stream
+@Client.on_message(filters.private & filters.user(ADMIN) & filters.command(["cplay"]))
+async def chstream(client, m: Message):
+    replied = m.reply_to_message
+    if not replied:
+        if len(m.command) < 2:
+            await m.reply("`Reply to some Video File!`")
+        else:
+            query = m.text.split(None, 1)[1]
+            regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
+            match = re.match(regex,query)
+            if match:
+                try:
+                    meta = ydl.extract_info(query, download=False)
+                    formats = meta.get('formats', [meta])
+                    for f in formats:
+                        ytstreamlink = f['url']
+                    livelink = ytstreamlink
+                    msg = await m.reply("`Starting YT Stream...`")
+                except Exception as e:
+                    msg = await m.reply(f"{e}")
+                    return
+            else:
+                livelink = query
+                msg = await m.reply("`Starting Video Stream...`")
+                    
+            chat_id = CHANNEL
+            process = raw_converter(livelink, f'audio{chat_id}.raw', f'video{chat_id}.raw')
+            FFMPEG_PROCESSES[chat_id] = process
+            await asyncio.sleep(10)
+            try:
+                audio_file = f'audio{chat_id}.raw'
+                video_file = f'video{chat_id}.raw'
+                while not os.path.exists(audio_file) or \
+                        not os.path.exists(video_file):
+                    await asyncio.sleep(2)
+                await call_py.join_group_call(
+                    chat_id,
+                    InputAudioStream(
+                        audio_file,
+                        AudioParameters(
+                            bitrate=48000,
+                        ),
+                    ),
+                    InputVideoStream(
+                        video_file,
+                        VideoParameters(
+                            width=640,
+                            height=360,
+                            frame_rate=20,
+                        ),
+                    ),
+                    stream_type=StreamType().local_stream,
+                )
+                await msg.edit("**Started Channel Stream!**")
+                await idle()
+            except Exception as e:
+                await msg.edit(f"**Error** -- `{e}`")
+   
+    elif replied.video or replied.document:
+        msg = await m.reply("`Downloading...`")
+        video = await client.download_media(m.reply_to_message)
+        chat_id = CHANNEL
+        await msg.edit("`Processing...`")
+        os.system(f"ffmpeg -i '{video}' -f s16le -ac 1 -ar 48000 'audio{chat_id}.raw' -y -f rawvideo -r 20 -pix_fmt yuv420p -vf scale=640:360 'video{chat_id}.raw' -y")
+        try:
+            audio_file = f'audio{chat_id}.raw'
+            video_file = f'video{chat_id}.raw'
+            while not os.path.exists(audio_file) or \
+                    not os.path.exists(video_file):
+                await asyncio.sleep(2)
+            await call_py.join_group_call(
+                chat_id,
+                InputAudioStream(
+                    audio_file,
+                    AudioParameters(
+                        bitrate=48000,
+                    ),
+                ),
+                InputVideoStream(
+                    video_file,
+                    VideoParameters(
+                        width=640,
+                        height=360,
+                        frame_rate=20,
+                    ),
+                ),
+                stream_type=StreamType().local_stream,
+            )
+            await msg.edit("**Started Channel Stream!**")
+        except Exception as e:
+            await msg.edit(f"**Error** -- `{e}`")
+            await idle()
+    else:
+        await m.reply("`Reply to some Video!`")
+
+@Client.on_message(filters.private & filters.user(ADMIN) & filters.command(["cstop"]))
+async def chstopvideo(client, m: Message):
+    chat_id = CHANNEL
+    try:
+        process = FFMPEG_PROCESSES.get(chat_id)
+        if process:
+            try:
+                process.send_signal(SIGINT)
+                await asyncio.sleep(3)
+            except Exception as e:
+                print(e)
+        await call_py.leave_group_call(chat_id)
+        await m.reply("**⏹️ Stop Channel Stream!**")
+    except Exception as e:
+        await m.reply(f"**🚫 Error** - `{e}`")
+        
