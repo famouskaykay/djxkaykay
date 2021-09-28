@@ -27,6 +27,11 @@
         "description": "Your Video Player's assistant Username without @.",
         "required": true
       },
+      "REPLY_MESSAGE": {
+        "description": "A reply message to those who message the USER account in PM. Make it blank if you do not need this feature.",
+        "value": "Hello Sir, I'm a bot to stream videos on telegram voice chat, not having time to chat with you 😂!",
+        "required": false
+      },
       "API_HASH": {
         "description": "Your API HASH from https://my.teleram.org",
         "required": true
