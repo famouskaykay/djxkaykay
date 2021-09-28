@@ -2,6 +2,7 @@ import os, asyncio, re, pafy
 from pyrogram import Client
 from youtubesearchpython import VideosSearch
 from pytube import YouTube
+from bot.config import API_ID, API_HASH, BOT_TOKEN
 
 def load_env():
     API_ID = int(os.environ.get("API_ID"))
@@ -24,7 +25,14 @@ if os.path.isfile("config.py"):
 else:
     os.system("echo 'No config found. Getting variables'")
     API_ID, API_HASH, SESSION = load_env()
-
+    
+kay = Client(
+    ":memory:",
+    API_ID,
+    API_HASH,
+    bot_token=BOT_TOKEN,
+    plugins=dict(root="plugins"),
+)
 
 vcusr = Client(
     SESSION,
