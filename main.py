@@ -1,5 +1,5 @@
 import os
-from bot.plugins.nopm import User
+from bot import vcusr
 from pyrogram import Client, idle
 from bot.config import API_ID, API_HASH, BOT_TOKEN
 
@@ -14,7 +14,7 @@ if not os.path.isdir("./downloads"):
     os.makedirs("./downloads")
 
 kay.start()
-User.start()
+vcusr.start()
 print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")
 
 idle()
