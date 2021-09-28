@@ -1,23 +1,21 @@
-import os, asyncio, pafy
+import os
 import re
 import sys
 import time
 import ffmpeg
+import asyncio
 import subprocess
 from asyncio import sleep
-from pyrogram import Client, filters, idle
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
-from pytgcalls import GroupCallFactory
-from bot import video_link_getter, yt_video_search, match_url
-from bot import vcusr
-from bot import kay
-from bot.helpers.decorators import authorized_users_only
-from youtube_search import YoutubeSearch
-from bot.config import AUDIO_CALL, VIDEO_CALL
-from pyrogram.types import Message
-
 from youtube_dl import YoutubeDL
+from pyrogram import Client, filters
+from pyrogram.types import Message
+from pytgcalls import GroupCallFactory
+from bot.config import AUDIO_CALL, VIDEO_CALL
+from youtubesearchpython import VideosSearch
+from bot.helpers.decorators import authorized_users_only
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
+from bot import kay
 
 ydl_opts = {
         "quiet": True,
@@ -56,7 +54,7 @@ async def end_callbacc(client, CallbackQuery):
     await CallbackQuery.message.delete()
 
 
-@Client.on_message(filters.command(["stream"]) & filters.group & ~filters.edited)
+@Client.on_message(filters.command(["svc"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def stream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
