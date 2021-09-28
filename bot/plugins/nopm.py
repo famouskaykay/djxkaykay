@@ -1,7 +1,7 @@
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.errors import BotInlineDisabled
-from config import API_ID, API_HASH, SESSION_STRING, REPLY_MESSAGE
+from bot.config import API_ID, API_HASH, SESSION_STRING, REPLY_MESSAGE
 from bot import vcusr
 
 @vcusr.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited & ~filters.chat([777000, 454000]))
@@ -17,7 +17,7 @@ async def nopm(client, message):
             )
         except BotInlineDisabled:
             print(f"[WARN] - Inline Mode for your bot is not enabled. Enable from @Botfather to enable PM Permit !")
-            await message.reply_text(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \nt@famouskaykay3 | @kaykay 👑</b>")
+            await message.reply_text(f"{REPLY_MESSAGE}\n\n<b>© developed By : \nt@famouskaykay3 | kaykay 👑</b>")
         except Exception as e:
             print(e)
             pass
