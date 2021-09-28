@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 admins = {}
-ADMIN = int(os.getenv('ADMIN',import os
+ADMIN = int(os.getenv('ADMIN',import os))
 
 from os import getenv
 from dotenv import load_dotenv
