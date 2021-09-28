@@ -8,7 +8,7 @@ kay = Client(
     API_ID,
     API_HASH,
     bot_token=BOT_TOKEN,
-    plugins=dict(root="plugins"),
+    plugins=dict(root="bot/plugins"),
 )
 if not os.path.isdir("./downloads"):
     os.makedirs("./downloads")
