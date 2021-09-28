@@ -1,23 +1,19 @@
-import os
-from bot import vcusr
+import asyncio
 from pyrogram import Client, idle
-from bot.config import API_ID, API_HASH, BOT_TOKEN
-
+from config import API_ID, API_HASH, BOT_TOKEN
+from player.videoplayer import app
+from player.videoplayer import call_py
 kay = Client(
     ":memory:",
     API_ID,
     API_HASH,
     bot_token=BOT_TOKEN,
-    plugins=dict(root="bot/plugins"),
+    plugins=dict(root="player"),
 )
-if not os.path.isdir("./downloads"):
-    os.makedirs("./downloads")
+
 
 kay.start()
-vcusr.start()
-print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")
-
+app.start()
+call_py.start()
 idle()
-kay.stop()
-User.stop()
-print("\n[INFO] - STOPPED VIDEO PLAYER BOT, by famouskaykay !")
+    
