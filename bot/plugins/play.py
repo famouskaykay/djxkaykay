@@ -31,7 +31,7 @@ LOG_GROUP_ID = -1001576388235
 STREAM = {8}
 GROUP_CALLS = {}
 
-@kay.on_callback_query(filters.regex("end_callback"))
+@vcusr.on_callback_query(filters.regex("end_callback"))
 async def end_callbacc(client, CallbackQuery):
     chat_id = CallbackQuery.message.chat.id
     if chat_id in AUDIO_CALL:
@@ -54,7 +54,7 @@ async def end_callbacc(client, CallbackQuery):
     await CallbackQuery.message.delete()
 
 
-@kay.on_message(filters.command(["svc"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["svc"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def stream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
@@ -205,7 +205,7 @@ async def stream(client, m: Message):
     )
 
 
-@kay.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def pause(_, m: Message):
     chat_id = m.chat.id
@@ -224,7 +224,7 @@ async def pause(_, m: Message):
         
         
 
-@kay.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def resume(_, m: Message):
     chat_id = m.chat.id
@@ -241,7 +241,7 @@ async def resume(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-@kay.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
+@vcusr.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def endstream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
