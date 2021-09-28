@@ -8,9 +8,9 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
 RUN npm i -g npm
 
-RUN mkdir /innexia/
-COPY . /innexia
-WORKDIR /innexia
+RUN mkdir /famouskaykay/
+COPY . /famouskaykay
+WORKDIR /famouskaykay
 
 RUN pip3 install --upgrade pip
 RUN pip3 install -U -r requirements.txt
