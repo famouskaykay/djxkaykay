@@ -61,7 +61,28 @@ async def stream(client, m: Message):
     chat_id = m.chat.id
     media = m.reply_to_message
     if not media and not ' ' in m.text:
-        await msg.edit("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
+        try: INPUT_SOURCE = m.text.split(" ", 1)[1]
+        except IndexError: return await msg.edit("🔎 __Give me a URL or Search Query. Look__ ` for /help`")
+        if ("youtube.com" in INPUT_SOURCE) or ("youtu.be" in INPUT_SOURCE):
+            FINAL_URL = INPUT_SOURCE
+        else:
+            FINAL_URL = yt_video_search(INPUT_SOURCE)
+            if FINAL_URL == 404:
+                return await msg.edit("__No videos found__ 🤷‍♂️")
+        await msg.edit("📥 __Downloading...__")
+        LOCAL_FILE = video_link_getter(FINAL_URL, key="v")
+        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️ report this to @KayAspirerProject")
+         
+    try:
+        group_call = GROUP_CALLS.get(CHAT_ID)
+        if group_call is None:
+            group_call = GroupCallFactory(vcusr, outgoing_audio_bitrate_kbit=512).get_group_call()
+            GROUP_CALLS[CHAT_ID] = group_call
+        if group_call.is_connected:
+            await group_call.stop()
+            await asyncio.sleep(3)
+        await group_call.join(CHAT_ID)
+        await msg.delete()
 
     elif ' ' in m.text:
         text = m.text.split(' ', 1)
@@ -86,6 +107,7 @@ async def stream(client, m: Message):
                 thumb = split[0].strip()
             except Exception as e:
                 return await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
+        
                 print(e)
 
         else:
