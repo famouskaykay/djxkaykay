@@ -15,7 +15,7 @@ from youtubesearchpython import VideosSearch
 from bot.helpers.decorators import authorized_users_only
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
-from bot import kay
+from bot import vcusr
 
 ydl_opts = {
         "quiet": True,
