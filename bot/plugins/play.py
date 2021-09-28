@@ -10,10 +10,13 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQ
 from pytgcalls import GroupCallFactory
 from bot import video_link_getter, yt_video_search, match_url
 from bot import vcusr
+from bot import kay
 from bot.helpers.decorators import authorized_users_only
 from youtube_search import YoutubeSearch
 from bot.config import AUDIO_CALL, VIDEO_CALL
 from pyrogram.types import Message
+
+from youtube_dl import YoutubeDL
 
 
 ydl_opts = {
@@ -30,7 +33,7 @@ LOG_GROUP_ID = -1001576388235
 STREAM = {8}
 GROUP_CALLS = {}
 
-@vcusr.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
+@kay.on_message(filters.command(["pause"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def pause(_, m: Message):
     chat_id = m.chat.id
@@ -47,7 +50,7 @@ async def pause(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-@vcusr.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
+@kay.on_message(filters.command(["resume"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def resume(_, m: Message):
     chat_id = m.chat.id
@@ -64,7 +67,7 @@ async def resume(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-@vcusr.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
+@kay.on_message(filters.command(["endstream"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def endstream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
