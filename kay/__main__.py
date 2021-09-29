@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 Client(
-    "VC Streamer",
+    "djkaykay",
     API_ID,
     API_HASH,
     bot_token=TOKEN,
