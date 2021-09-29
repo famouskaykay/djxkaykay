@@ -1,76 +1,36 @@
 {
-    "name": "VCX Video Player",
-    "description": "A VC xxxxxxl Bot for Telegram made with 💞 By kaykay ",
-    "logo": "https://telegra.ph/file/e1be1a6fcb7f0e37c297f.jpg",
+    "name": "ddjkaykay",
+    "description": "A Telegram Bot To Stream Videos and Audios in Voice Chat",
+    "stack": "container",
     "keywords": [
-        "pytgcalls",
-        "Telegram Bot",
-        "Vidio Vc Steramer"
+      "telegram",
+      "voicechat",
+      "bot"
     ],
-    "website": "https://t.me/KayAspirerProject",
-    "repository": "https://gitHub.com/famouskaykay/djxkaykay",
-    "success_url": "https://t.me/KayAspirerProject",
     "env": {
-        "API_ID": {
-            "description": "Your APP_ID from my.telegram.org",
-            "required": true
-        },
-        "API_HASH": {
-            "description": "Your API_HASH from my.telegram.org",
-            "required": true
-        },
-        "ADMIN": {
-            "description": "Your User Id",
-            "required": true
-        },
-        "CHANNEL": {
-            "description": "Your Channel User id",
-            "required": true
-        },
-        "ASSISTANT_NAME": {
-            "description": "Put Your Assistant Username without @",
-            "required": true
-        },
-        "SUPPORT_GROUP": {
-            "description": "put your support group link without @",
-            "required": true
-        },
-        "UPDATES_CHANNEL": {
-            "description": "put your channel link without @",
-            "required": true
-        },
-        "SOURCE_CODE": {
-            "description": "put your GitHub link like this GitHub.com/famouskaykay/djxkaykay",
-            "required": true 
-        },
-        "BOT_USERNAME": {
-            "description": "Put your bot username",
-            "required": true
-        },
-        "BOT_TOKEN": {
-            "description": "Your bot token from @botfather",
-            "required": true
-        },
-        "SUDO_USERS": {
-            "description": "Put Your id",
-            "required": true
-        },
-        "SESSION_NAME": {
-            "description": "Pyrogram String Session",
-            "required": true
-        }
-    },
-    "addons": [],
-    "buildpacks": [
-        {
-            "url": "heroku/python"
-        }
-    ],
-    "formation": {
-        "worker": {
-            "quantity": 1,
-            "size": "free"
-        }
-    },
-    "stack": "container"
-}
+      "API_ID": {
+        "description": "Your API ID from https://my.telegram.org",
+        "required": true
+      },
+      "API_HASH": {
+        "description": "Your API HASH from https://my.teleram.org",
+        "required": true
+      },
+      "SESSION": {
+        "description": "Get Pyrogram string session from https://replit.com/@AnjanaMadu/GenerateStringSession",
+        "required": true
+      },
+      "TOKEN": {
+        "description": "Your BOT TOKEN from https://t.me/BotFather",
+        "required": true
+      },
+      "ADMINS": {
+        "description": "Your telegram ID. If 2 or more, Seperate by space.",
+        "required": true
+      },
+      "CHAT_ID": {
+        "description": "Chat ID where need to bot work.",
+        "required": true
+      }
+    }
+  }
