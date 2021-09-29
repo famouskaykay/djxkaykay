@@ -5,7 +5,7 @@ from kay import video_info_extract, yt_video_search, match_url
 from kay import kaykay, ADMINS, CHAT_ID
 
 
-group_call = GroupCallFactory(vcusr).get_group_call()
+group_call = GroupCallFactory(kaykay).get_group_call()
 music_queue = []
 vc_live = False
     
