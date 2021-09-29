@@ -2,7 +2,7 @@ import os, asyncio
 from pyrogram import Client, filters
 from pytgcalls import GroupCallFactory
 from kay import kaykay, CHAT_ID, ADMINS
-from kay.plugins.player import group_call, vc_live, music_queue
+from kay.plugins.djkay import group_call, vc_live, music_queue
 
 vc_paused = False
     
