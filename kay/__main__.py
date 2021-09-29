@@ -13,7 +13,7 @@ Client(
     API_ID,
     API_HASH,
     bot_token=TOKEN,
-    plugins={'root': 'bot.plugins'}
+    plugins={'root': 'kay.plugins'}
 ).start()
 os.system("echo 'Bot Started'")
 kaykay.run()
