@@ -16,4 +16,4 @@ Client(
     plugins={'root': 'bot.plugins'}
 ).start()
 os.system("echo 'Bot Started'")
-vcusr.run()
+kaykay.run()
