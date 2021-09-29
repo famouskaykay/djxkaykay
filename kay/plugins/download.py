@@ -1,7 +1,7 @@
 import os
 from pyrogram import Client, filters
-from bot import kaykay
-from bot import yt_video_search, match_url
+from kay import kaykay
+from kay import yt_video_search, match_url
 import youtube_dl
 
 @Client.on_message(filters.command("audio", "!"))
