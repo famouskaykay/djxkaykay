@@ -4,7 +4,7 @@ from kay import kaykay
 from kay import yt_video_search, match_url
 import youtube_dl
 
-@Client.on_message(filters.command("audio", "!"))
+@Client.on_message(filters.command("da", "x"))
 async def audio_dl(client, message):
     msg = await message.reply("⏳ __Please wait.__")
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
@@ -39,7 +39,7 @@ async def audio_dl(client, message):
         await msg.delete()
     except: pass
     
-@Client.on_message(filters.command("video", "!"))
+@Client.on_message(filters.command("dv", "x"))
 async def video_dl(client, message):
     msg = await message.reply("⏳ __Please wait.__")
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
