@@ -39,7 +39,7 @@ async def play_or_queue(status, data=None):
                 return {"status":"play", "msg":f"🚩 __{data['VIDEO_TITLE']} is Streaming...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
 
               
-@Client.on_message(filters.command("endvc", "!"))
+@Client.on_message(filters.command("endvc", "x"))
 async def leave_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
@@ -49,7 +49,7 @@ async def leave_vc(client, message):
     music_queue.clear()
     await message.reply_sticker("CAADBQADCAMAAtFreFVNNKAMgNe-YwI")
     
-@Client.on_message(filters.command("live", "!"))
+@Client.on_message(filters.command("live", "x"))
 async def live_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
@@ -80,7 +80,7 @@ async def live_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
 
-@Client.on_message(filters.command("radio", "!"))
+@Client.on_message(filters.command("radio", "x"))
 async def radio_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
@@ -106,7 +106,7 @@ async def radio_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
     
-@Client.on_message(filters.command("play", "!"))
+@Client.on_message(filters.command("play", "x"))
 async def play_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
@@ -143,7 +143,7 @@ async def play_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
 
-@Client.on_message(filters.command("stream", "!"))
+@Client.on_message(filters.command("stream", "x"))
 async def stream_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
@@ -179,7 +179,7 @@ async def stream_vc(client, message):
         await message.reply(str(e))
         return await group_call.stop()
 
-@Client.on_message(filters.command("skip", "!"))
+@Client.on_message(filters.command("skip", "x"))
 async def skip_vc(client, message):
     if not message.chat.id == CHAT_ID: return
     if not message.from_user.id in ADMINS: return
