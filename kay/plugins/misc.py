@@ -34,16 +34,16 @@ async def resume_vc(client, message):
 async def help_vc(client, message):
     text = '''====== Help Menu ======
 **Play as Audio**
-- !play __(reply to audio / youtube url / search query)__
-- !radio __(radio stream url)__
+- xplay __(reply to audio / youtube url / search query)__
+- xradio __(radio stream url)__
 **Play as Video**
-- !stream __(reply to video / youtube url / search query)__
-- !live __(youtube live stream url)__
+- xstream __(reply to video / youtube url / search query)__
+- xlive __(youtube live stream url)__
 **Extra**
-- !endvc: Leave from vc.
-- !skip: Skip the current song.
-- !pause: Pause the vc.
-- !resume: Resume the vc.
-- !video: Download url or search query in video format.
-- !audio: Download url or search query in audio format.'''
+- xendvc: Leave from vc.
+- xskip: Skip the current song.
+- xpause: Pause the vc.
+- xresume: Resume the vc.
+- xdv: Download url or search query in video format.
+- xda: Download url or search query in audio format.'''
     await message.reply(text)
