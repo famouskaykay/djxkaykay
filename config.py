@@ -6,7 +6,7 @@ if os.path.exists("local.env"):
     load_dotenv("local.env")
 CONFIG = False
 load_dotenv()
-#ADMINS = 1970289371
+ADMINS = admins
 admins = {}
 
 SESSION = getenv("SESSION_NAME", "session")
